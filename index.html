@@ -1,103 +1,115 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Сайт в разработке</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a535c 0%, #2e8b57 100%);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-        }
-        
-        .container {
-            text-align: center;
-            padding: 2rem;
-            max-width: 800px;
-            background-color: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-        
-        h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
-            color: #e0f7fa;
-        }
-        
-        .subtitle {
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-            color: #e0f7fa;
-        }
-        
-        .spinner {
-            width: 60px;
-            height: 60px;
-            border: 5px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: #e0f7fa;
-            animation: spin 1s ease-in-out infinite;
-            margin: 2rem auto;
-        }
-        
-        .progress {
-            width: 80%;
-            height: 8px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-            margin: 2rem auto;
-            overflow: hidden;
-        }
-        
-        .progress-bar {
-            height: 100%;
-            width: 40%;
-            background: linear-gradient(90deg, #4caf50, #2e7d32);
-            border-radius: 4px;
-            animation: progress 3s ease-in-out infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        @keyframes progress {
-            0%, 100% { width: 40%; }
-            50% { width: 70%; }
-        }
-        
-        .note {
-            font-size: 1.1rem;
-            margin-top: 2rem;
-            opacity: 0.8;
-            color: #e0f7fa;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#14110e" />
+  <title>Ashen Crown — Tactical Battle</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2314110e'/%3E%3Ctext x='16' y='24' font-size='20' text-anchor='middle' fill='%23d6b56c'%3E%E2%9C%A6%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <div class="container">
-        <h1>Сайт в разработке</h1>
-        <p class="subtitle">Мы создаём что-то удивительное!</p>
-        <div class="spinner"></div>
-        <div class="progress">
-            <div class="progress-bar"></div>
+  <div id="app">
+    <div id="scene" aria-label="Battlefield"></div>
+    <div id="vignette" aria-hidden="true"></div>
+
+    <div id="ui">
+      <header id="topbar">
+        <div class="brand">
+          <div class="brand-sigil" aria-hidden="true">✦</div>
+          <div class="brand-text">
+            <h1>ASHEN CROWN</h1>
+            <p><span id="encounter-title">The Ruined Watchtower</span><span class="dot">·</span><span id="round-label">Round 1</span></p>
+          </div>
         </div>
-        <p class="note">Этот проект находится в активной разработке. Загляните позже — будет ещё лучше!</p>
+        <div class="top-actions">
+          <button id="btn-speed" class="icon-btn" type="button" title="Toggle fast presentation (F)" aria-label="Toggle fast presentation">»</button>
+          <button id="btn-help" class="icon-btn" type="button" title="How to play (H)" aria-label="How to play">?</button>
+          <button id="btn-sound" class="icon-btn" type="button" title="Toggle sound (M)" aria-label="Toggle sound">♪</button>
+          <button id="btn-pause" class="icon-btn" type="button" title="Pause (Esc)" aria-label="Pause">Ⅱ</button>
+        </div>
+      </header>
+
+      <aside id="turn-tower" aria-label="Initiative order">
+        <div class="tower-head">
+          <span>INITIATIVE</span>
+          <span id="round-pip">R1</span>
+        </div>
+        <div id="queue-list"></div>
+        <div class="tower-foot"><span id="turn-side">YOUR TURN</span></div>
+      </aside>
+
+      <div id="log-panel" aria-live="polite">
+        <div class="log-title">CHRONICLE</div>
+        <ul id="log-list"></ul>
+      </div>
+
+      <div id="hint-banner" class="hidden"></div>
+
+      <section id="panel-ally" class="unit-panel ally-panel" aria-label="Active hero">
+        <div class="portrait-frame large"><img id="ally-portrait" alt="" /></div>
+        <div class="panel-body">
+          <div class="panel-name"><span id="ally-name">Aldric</span><em id="ally-level">Lv 3</em></div>
+          <div class="panel-sub" id="ally-role">Warden · Long sword</div>
+          <div class="hp-row">
+            <span class="hp-label">HP</span>
+            <div class="hp-bar"><i id="ally-hp-fill"></i></div>
+            <span id="ally-hp-text">280 / 280</span>
+          </div>
+          <div class="panel-meta"><span id="ally-statuses" class="status-row"></span></div>
+        </div>
+      </section>
+
+      <section id="panel-enemy" class="unit-panel enemy-panel" aria-label="Current target">
+        <div class="portrait-frame large"><img id="enemy-portrait" alt="" /></div>
+        <div class="panel-body">
+          <div class="panel-name"><span id="enemy-name">Brigand</span><em id="enemy-level">Lv 2</em></div>
+          <div class="panel-sub" id="enemy-role">Raider · Notched axe</div>
+          <div class="hp-row">
+            <span class="hp-label">HP</span>
+            <div class="hp-bar enemy"><i id="enemy-hp-fill"></i></div>
+            <span id="enemy-hp-text">170 / 170</span>
+          </div>
+          <div class="panel-meta"><span id="enemy-statuses" class="status-row"></span></div>
+        </div>
+      </section>
+
+      <div id="action-zone">
+        <div id="target-hint" class="hidden"></div>
+        <div id="ability-popover" class="hidden"></div>
+        <div id="action-wheel" aria-label="Actions">
+          <div class="wheel-plate" aria-hidden="true"></div>
+          <button class="wheel-btn" data-action="attack" type="button">
+            <span class="wheel-glyph">⚔</span><span class="wheel-label">Attack</span><kbd>1</kbd>
+          </button>
+          <button class="wheel-btn" data-action="ability" type="button">
+            <span class="wheel-glyph">✦</span><span class="wheel-label">Ability</span><kbd>2</kbd>
+          </button>
+          <div class="wheel-gem" aria-hidden="true"><span>✧</span></div>
+          <button class="wheel-btn" data-action="defend" type="button">
+            <span class="wheel-glyph">◈</span><span class="wheel-label">Defend</span><kbd>3</kbd>
+          </button>
+          <button class="wheel-btn" data-action="wait" type="button">
+            <span class="wheel-glyph">⧖</span><span class="wheel-label">Wait</span><kbd>4</kbd>
+          </button>
+          <button class="wheel-btn small" data-action="shift" type="button">
+            <span class="wheel-glyph">⇄</span><span class="wheel-label">Row</span><kbd>5</kbd>
+          </button>
+        </div>
+        <div id="turn-banner">YOUR TURN</div>
+      </div>
+
+      <div id="float-layer" aria-hidden="true"></div>
+      <div id="tooltip" class="hidden" role="tooltip"></div>
     </div>
+
+    <div id="overlay" class="overlay hidden">
+      <div id="overlay-panel" class="overlay-panel"></div>
+    </div>
+  </div>
+
+  <!-- Classic script (not a module) so the game also runs when index.html is
+       opened directly from disk via file://. Rebuild with `node build.mjs`. -->
+  <script src="js/ashen-crown.js"></script>
 </body>
 </html>

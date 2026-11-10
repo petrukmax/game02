@@ -1,0 +1,15 @@
+{
+  "name": "ashen-crown",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Disciples II-style tactical battle prototype. Canvas 2D, no dependencies.",
+  "scripts": {
+    "build": "node build.mjs",
+    "start": "node server.cjs",
+    "test": "node --test tests/combat.test.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
